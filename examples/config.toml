@@ -1,0 +1,7 @@
+app_desc = "app_desc"
+
+[common]
+config_toml = "toml"
+
+[db]
+server = "127.0.0.1:3306"

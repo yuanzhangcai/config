@@ -1,0 +1,8 @@
+---
+app_desc: yaml
+
+common:
+    config_yaml: yaml
+
+db:
+    server: 127.0.0.1:3306

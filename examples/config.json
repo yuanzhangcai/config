@@ -1,0 +1,9 @@
+{
+    "app_desc" : "json",
+    "common" : {
+        "config_json" : "json"
+    },
+    "db" : {
+        "server" : "127.0.0.1:3306"
+    }
+}
