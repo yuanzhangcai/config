@@ -7,5 +7,6 @@ require (
 	github.com/bitly/go-simplejson v0.5.0
 	github.com/ghodss/yaml v1.0.0
 	github.com/imdario/mergo v0.3.9
+	github.com/stretchr/testify v1.6.1
 	gopkg.in/yaml.v2 v2.3.0 // indirect
 )

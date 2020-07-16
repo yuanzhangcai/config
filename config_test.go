@@ -2,36 +2,12 @@ package config
 
 import (
 	"fmt"
-	"os"
 	"testing"
 
-	"github.com/spf13/viper"
 	"github.com/stretchr/testify/assert"
 )
 
 var configFilePath = "/Users/zacyuan/MyWork/config/examples/"
-
-func loadConfig(file string) error {
-
-	if _, err := os.Stat(file); err != nil {
-		return err
-	}
-
-	config := viper.New()
-	config.SetConfigFile(file)
-	err := config.ReadInConfig()
-	if err != nil {
-		return err
-	}
-
-	allKeys := config.AllKeys()
-	for _, one := range allKeys {
-		//fmt.Println(one)
-		viper.SetDefault(one, config.Get(one))
-	}
-
-	return nil
-}
 
 func TestConfig(t *testing.T) {
 	cfg := New()
@@ -48,8 +24,34 @@ func TestConfig(t *testing.T) {
 	fmt.Println(cfg.GetString("common", "config_json"))
 	fmt.Println(cfg.GetString("common", "config_yaml"))
 	fmt.Println(cfg.GetString("common", "config_toml"))
-
 }
+
+func TestNew(t *testing.T) {
+	cfg := New()
+	assert.NotNil(t, cfg)
+}
+
+// func loadConfig(file string) error {
+
+// 	if _, err := os.Stat(file); err != nil {
+// 		return err
+// 	}
+
+// 	config := viper.New()
+// 	config.SetConfigFile(file)
+// 	err := config.ReadInConfig()
+// 	if err != nil {
+// 		return err
+// 	}
+
+// 	allKeys := config.AllKeys()
+// 	for _, one := range allKeys {
+// 		//fmt.Println(one)
+// 		viper.SetDefault(one, config.Get(one))
+// 	}
+
+// 	return nil
+// }
 
 // func BenchmarkGet(b *testing.B) {
 // 	_ = LoadFile(configFilePath + "config.toml")
