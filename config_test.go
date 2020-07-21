@@ -9,6 +9,10 @@ import (
 
 var configFilePath = "/Users/zacyuan/MyWork/config/examples/"
 
+func init() {
+	_ = LoadFile(configFilePath + "config.toml")
+}
+
 func TestConfig(t *testing.T) {
 	cfg := New()
 	err := cfg.LoadFile(configFilePath + "config.toml")
@@ -29,6 +33,161 @@ func TestConfig(t *testing.T) {
 func TestNew(t *testing.T) {
 	cfg := New()
 	assert.NotNil(t, cfg)
+}
+
+func TestGet(t *testing.T) {
+	t.Run("Get have key", func(t *testing.T) {
+		value := Get("app_desc")
+		assert.NotNil(t, value)
+	})
+
+	t.Run("Get key is not exist", func(t *testing.T) {
+		value := Get("no_key")
+		assert.Nil(t, value)
+	})
+}
+
+func TestGetString(t *testing.T) {
+	t.Run("GetString have key", func(t *testing.T) {
+		value := GetString("app_desc")
+		assert.Equal(t, "toml_cfg", value)
+	})
+
+	t.Run("GetString key is not exist", func(t *testing.T) {
+		value := GetString("no_key")
+		assert.Empty(t, value)
+	})
+}
+
+func TestGetStringArray(t *testing.T) {
+	t.Run("GetStringArray have key", func(t *testing.T) {
+		value := GetStringArray("str_array")
+		assert.Equal(t, "aa", value[0])
+		assert.Equal(t, "bb", value[1])
+	})
+
+	t.Run("GetStringArray key is not exist", func(t *testing.T) {
+		value := GetStringArray("no_key")
+		assert.Empty(t, value)
+	})
+}
+
+func TestGetBool(t *testing.T) {
+	t.Run("GetBool true", func(t *testing.T) {
+		assert.True(t, GetBool("bool_true"))
+	})
+
+	t.Run("GetBool false", func(t *testing.T) {
+		assert.False(t, GetBool("bool_false"))
+	})
+
+	t.Run("GetBool key is not exist", func(t *testing.T) {
+		assert.False(t, GetBool("no_key"))
+	})
+}
+
+func TestGetInt(t *testing.T) {
+	t.Run("GetInt 13", func(t *testing.T) {
+		assert.Equal(t, 13, GetInt("int_13"))
+	})
+
+	t.Run("GetInt -1", func(t *testing.T) {
+		assert.Equal(t, -1, GetInt("int__1"))
+	})
+
+	t.Run("GetInt key is not exist", func(t *testing.T) {
+		assert.Equal(t, 0, GetInt("no_key"))
+	})
+}
+
+func TestGetInt64(t *testing.T) {
+	t.Run("GetInt64 13", func(t *testing.T) {
+		assert.Equal(t, int64(13), GetInt64("int_13"))
+	})
+
+	t.Run("GetInt64 -1", func(t *testing.T) {
+		assert.Equal(t, int64(-1), GetInt64("int__1"))
+	})
+
+	t.Run("GetInt64 key is not exist", func(t *testing.T) {
+		assert.Equal(t, int64(0), GetInt64("no_key"))
+	})
+}
+
+func TestGetUint64(t *testing.T) {
+	t.Run("GetUint64 13", func(t *testing.T) {
+		assert.Equal(t, uint64(13), GetUint64("int_13"))
+	})
+
+	t.Run("GetUint64 -1", func(t *testing.T) {
+		assert.Equal(t, uint64(0), GetUint64("int__1"))
+	})
+
+	t.Run("GetUint64 key is not exist", func(t *testing.T) {
+		assert.Equal(t, uint64(0), GetUint64("no_key"))
+	})
+}
+
+func TestGetFloat64(t *testing.T) {
+	t.Run("GetFloat64 45.3", func(t *testing.T) {
+		assert.Equal(t, float64(45.3), GetFloat64("float64"))
+	})
+
+	t.Run("GetFloat64 -1", func(t *testing.T) {
+		assert.Equal(t, float64(-1), GetFloat64("int__1"))
+	})
+
+	t.Run("GetFloat64 key is not exist", func(t *testing.T) {
+		assert.Equal(t, float64(0), GetFloat64("no_key"))
+	})
+}
+
+func TestGetArray(t *testing.T) {
+	t.Run("GetArray have key", func(t *testing.T) {
+		value := GetArray("str_array")
+		assert.Equal(t, 2, len(value))
+	})
+
+	t.Run("GetArray key is not exist", func(t *testing.T) {
+		value := GetArray("no_key")
+		assert.Equal(t, 0, len(value))
+	})
+}
+
+func TestGetMap(t *testing.T) {
+	t.Run("GetMap have key", func(t *testing.T) {
+		value := GetMap("common")
+		assert.NotNil(t, value)
+		assert.Equal(t, "toml", value["config_toml"].(string))
+	})
+
+	t.Run("GetMap key is not exist", func(t *testing.T) {
+		value := GetMap("no_key")
+		assert.Nil(t, value)
+	})
+}
+
+func TestScan(t *testing.T) {
+	value := struct {
+		List   []string `json:"list"`
+		Server string   `json:"server"`
+		Count  int      `json:"count"`
+	}{}
+	err := Scan([]string{"db"}, &value)
+	assert.Nil(t, err)
+	assert.Equal(t, 2, len(value.List))
+	assert.Equal(t, "127.0.0.1:3306", value.Server)
+	assert.Equal(t, 100, value.Count)
+}
+
+func TestSet(t *testing.T) {
+	Set("set_key", "value")
+	assert.Equal(t, "value", GetString("set_key"))
+}
+
+func TestSetPath(t *testing.T) {
+	SetPath([]string{"common", "set_key"}, "value")
+	assert.Equal(t, "value", GetString("common", "set_key"))
 }
 
 // func loadConfig(file string) error {

@@ -1,7 +1,15 @@
-app_desc = "app_desc"
+app_desc = "toml_cfg"
+str_array = ["aa", "bb"]
+bool_true = true
+bool_false = false
+int_13 = 13
+int__1 = -1
+float64 = 45.3
 
 [common]
 config_toml = "toml"
 
 [db]
+list = ["score", "good"]
 server = "127.0.0.1:3306"
+count = 100

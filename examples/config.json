@@ -1,5 +1,6 @@
 {
-    "app_desc" : "json",
+    "app_desc" : "json_cfg",
+    "bool_true" : false,
     "common" : {
         "config_json" : "json"
     },

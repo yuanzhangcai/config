@@ -1,5 +1,5 @@
 ---
-app_desc: yaml
+app_desc: yaml_cfg
 
 common:
     config_yaml: yaml

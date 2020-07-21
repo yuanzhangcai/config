@@ -9,6 +9,7 @@ import (
 	"sync"
 
 	simplejson "github.com/bitly/go-simplejson"
+	"github.com/fsnotify/fsnotify"
 	"github.com/imdario/mergo"
 	"github.com/yuanzhangcai/config/encoder"
 )
@@ -27,12 +28,16 @@ var (
 // JSONConfig json配置文件
 type JSONConfig struct {
 	sync.RWMutex
-	cfg  map[string]interface{}
-	json *simplejson.Json
+	cfg   map[string]interface{}
+	json  *simplejson.Json
+	files []string
+	watch *fsnotify.Watcher
 }
 
 func newJSONConfig() *JSONConfig {
-	return &JSONConfig{}
+	return &JSONConfig{
+		json: simplejson.New(),
+	}
 }
 
 // LoadFile 加载配置文件
@@ -65,7 +70,7 @@ func (c *JSONConfig) LoadFileWithEncoder(file string, loader encoder.Encoder) er
 	c.Lock()
 	defer c.Unlock()
 
-	err = mergo.Merge(&c.cfg, temp)
+	err = mergo.MergeWithOverwrite(&c.cfg, temp)
 	if err != nil {
 		return err
 	}
@@ -80,7 +85,56 @@ func (c *JSONConfig) LoadFileWithEncoder(file string, loader encoder.Encoder) er
 		return err
 	}
 
+	err = c.addFile(file)
+	if err != nil {
+		return err
+	}
+
 	return nil
+}
+
+func (c *JSONConfig) addFile(file string) error {
+	for _, one := range c.files {
+		if one == file {
+			return nil
+		}
+	}
+	c.files = append(c.files, file)
+	if c.watch == nil {
+		watch, err := fsnotify.NewWatcher()
+		if err != nil {
+			return err
+		}
+		c.watch = watch
+		c.listenWatch()
+	}
+
+	err := c.watch.Add(file)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (c *JSONConfig) listenWatch() {
+	go func() {
+		for event := range c.watch.Events {
+			c.reload(event.Name)
+		}
+	}()
+}
+
+func (c *JSONConfig) reload(file string) {
+	index := 0
+	for i, one := range c.files {
+		if one == file {
+			index = i
+			break
+		}
+	}
+	for i := index; i < len(c.files); i++ {
+		_ = c.LoadFile(c.files[i])
+	}
 }
 
 // Get 获取interface配置
@@ -155,7 +209,7 @@ func (c *JSONConfig) GetMap(keys ...string) map[string]interface{} {
 
 // Scan 读取配置到指定对象
 func (c *JSONConfig) Scan(keys []string, value interface{}) error {
-	buf, err := c.json.GetPath(keys...).Bytes()
+	buf, err := c.json.GetPath(keys...).MarshalJSON()
 	if err != nil {
 		return err
 	}
