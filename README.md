@@ -1,5 +1,20 @@
 # config
-配置文件解析，目前支持toml、yaml、json文件格式。支持多配置文件重载。
+配置文件解析，目前支持toml、yaml、json文件格式。支持多配置文件重载。默认初次加载所有环境变量。
+
+example:
+```
+    import github.com/yuanzhangcai/config
+
+    // 加载配置
+    config.LoadFile(configFilePath + "config.toml")
+
+    // 读取配置参数
+    value := config.GetString("key")
+
+    // 修改配置参数
+    config.Set("newKey", "value")
+
+```
 
 性能压测：
 ```
