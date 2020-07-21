@@ -196,6 +196,12 @@ func TestSetPath(t *testing.T) {
 	assert.Equal(t, "value", GetString("common", "set_key"))
 }
 
+func TestLoadOsEnv(t *testing.T) {
+	os.Setenv("test_env", "dev")
+	LoadOsEnv()
+	assert.Equal(t, "dev", GetString("test_env"))
+}
+
 // func loadConfig(file string) error {
 
 // 	if _, err := os.Stat(file); err != nil {

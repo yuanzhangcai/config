@@ -6,6 +6,7 @@ import "github.com/yuanzhangcai/config/encoder"
 type Loader interface {
 	LoadFile(file string) error                                    // 加载配置文件
 	LoadFileWithEncoder(file string, loader encoder.Encoder) error // 指定编码器加载配置文件
+	LoadOsEnv()                                                    // 加载环境变量
 }
 
 // Getter 获取接口
@@ -111,4 +112,9 @@ func Set(key string, value interface{}) {
 // SetPath 写入多级配置
 func SetPath(keys []string, value interface{}) {
 	defaultConfig.SetPath(keys, value)
+}
+
+// LoadOsEnv 加载环境变量
+func LoadOsEnv() {
+	defaultConfig.LoadOsEnv()
 }
