@@ -2,6 +2,7 @@ package config
 
 import (
 	"fmt"
+	"os"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -186,6 +187,11 @@ func TestSet(t *testing.T) {
 }
 
 func TestSetPath(t *testing.T) {
+	arr := os.Environ()
+	for _, one := range arr {
+		fmt.Println(one)
+	}
+
 	SetPath([]string{"common", "set_key"}, "value")
 	assert.Equal(t, "value", GetString("common", "set_key"))
 }

@@ -2,6 +2,7 @@ package config
 
 import (
 	"io/ioutil"
+	"os"
 	"testing"
 	"time"
 
@@ -98,4 +99,10 @@ func TestListenWatch(t *testing.T) {
 	assert.Equal(t, "127.0.0.1", cfg.GetString("common", "redis"))
 
 	_ = ioutil.WriteFile(file, buf, 0777)
+}
+
+func TestLoadOsEnv(t *testing.T) {
+	os.Setenv("test_env", "dev")
+	cfg := newJSONConfig()
+	assert.Equal(t, "dev", cfg.GetString("test_env"))
 }

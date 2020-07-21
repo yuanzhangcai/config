@@ -35,8 +35,22 @@ type JSONConfig struct {
 }
 
 func newJSONConfig() *JSONConfig {
-	return &JSONConfig{
+	cfg := &JSONConfig{
 		json: simplejson.New(),
+	}
+	cfg.LoadOsEnv() // 默认载入环境变量
+	return cfg
+}
+
+// LoadOsEnv 载入环境变量
+func (c *JSONConfig) LoadOsEnv() {
+	arr := os.Environ()
+	for _, one := range arr {
+		tmp := strings.Split(one, "=")
+		if len(tmp) < 2 {
+			continue
+		}
+		c.json.Set(tmp[0], tmp[1])
 	}
 }
 
