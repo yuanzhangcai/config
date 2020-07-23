@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/yuanzhangcai/config/encoder"
 )
 
 func TestNewJSONConfig(t *testing.T) {
@@ -46,35 +45,6 @@ func TestLoadFile(t *testing.T) {
 	t.Run("LoadFile load unsupported file 2", func(t *testing.T) {
 		err := cfg.LoadFile(configFilePath + "config")
 		assert.Equal(t, ErrUnsupportedFileFormat, err)
-	})
-}
-
-func TestLoadFileWithEncoder(t *testing.T) {
-	cfg := newJSONConfig()
-
-	t.Run("LoadFileWithEncoder file is not exist", func(t *testing.T) {
-		err := cfg.LoadFileWithEncoder(configFilePath+"db.toml", encoder.NewTomlEncoder())
-		assert.NotNil(t, err)
-	})
-
-	t.Run("LoadFileWithEncoder file format is not right", func(t *testing.T) {
-		err := cfg.LoadFileWithEncoder(configFilePath+"config.toml", encoder.NewYamlEncoder())
-		assert.NotNil(t, err)
-	})
-
-	t.Run("LoadFileWithEncoder load toml file", func(t *testing.T) {
-		err := cfg.LoadFileWithEncoder(configFilePath+"config.toml", encoder.NewTomlEncoder())
-		assert.Nil(t, err)
-	})
-
-	t.Run("LoadFileWithEncoder load json file", func(t *testing.T) {
-		err := cfg.LoadFileWithEncoder(configFilePath+"config.json", encoder.NewJSONEncoder())
-		assert.Nil(t, err)
-	})
-
-	t.Run("LoadFileWithEncoder load yaml file", func(t *testing.T) {
-		err := cfg.LoadFileWithEncoder(configFilePath+"config.yaml", encoder.NewYamlEncoder())
-		assert.Nil(t, err)
 	})
 }
 

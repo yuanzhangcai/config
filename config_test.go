@@ -1,7 +1,6 @@
 package config
 
 import (
-	"fmt"
 	"os"
 	"testing"
 
@@ -24,11 +23,6 @@ func TestConfig(t *testing.T) {
 
 	err = cfg.LoadFile(configFilePath + "config.yaml")
 	assert.Nil(t, err)
-
-	fmt.Println(cfg.GetString("app_desc"))
-	fmt.Println(cfg.GetString("common", "config_json"))
-	fmt.Println(cfg.GetString("common", "config_yaml"))
-	fmt.Println(cfg.GetString("common", "config_toml"))
 }
 
 func TestNew(t *testing.T) {
@@ -187,19 +181,67 @@ func TestSet(t *testing.T) {
 }
 
 func TestSetPath(t *testing.T) {
-	arr := os.Environ()
-	for _, one := range arr {
-		fmt.Println(one)
-	}
-
 	SetPath([]string{"common", "set_key"}, "value")
 	assert.Equal(t, "value", GetString("common", "set_key"))
 }
 
 func TestLoadOsEnv(t *testing.T) {
 	os.Setenv("test_env", "dev")
-	LoadOsEnv()
+	err := LoadOsEnv()
+	assert.Nil(t, err)
 	assert.Equal(t, "dev", GetString("test_env"))
+}
+
+func TestLoadMemory(t *testing.T) {
+	t.Run("LoadMemory success json", func(t *testing.T) {
+		str := `{
+			"name" : "aaa",
+			"db" : {
+				"list" : ["db1", "db2"],
+				"db1" : "127.0.0.1"
+			}
+		}`
+		err := LoadMemory(str, "json")
+		assert.Nil(t, err)
+		assert.Equal(t, "aaa", GetString("name"))
+		assert.Equal(t, 2, len(GetStringArray("db", "list")))
+	})
+
+	t.Run("LoadMemory success toml", func(t *testing.T) {
+		str := `
+		name = "aaa"
+		[db]
+		list = ["db1", "db2"]
+		db1 = "127.0.0.1"
+		`
+		err := LoadMemory(str, "toml")
+		assert.Nil(t, err)
+		assert.Equal(t, "aaa", GetString("name"))
+		assert.Equal(t, 2, len(GetStringArray("db", "list")))
+	})
+
+	t.Run("LoadMemory unsupported", func(t *testing.T) {
+		str := `{
+			"name" : "aaa",
+			"db" : {
+				"list" : ["db1", "db2"],
+				"db1" : "127.0.0.1"
+			}
+		}`
+		err := LoadMemory(str, "ini")
+		assert.Equal(t, ErrUnsupportedFileFormat, err)
+	})
+
+	t.Run("LoadMemory error", func(t *testing.T) {
+		str := `
+		name = "aaa"
+		[db]
+		list = ["db1", "db2"]
+		db1 = "127.0.0.1"
+		`
+		err := LoadMemory(str, "json")
+		assert.NotNil(t, err)
+	})
 }
 
 // func loadConfig(file string) error {

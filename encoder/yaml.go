@@ -22,8 +22,13 @@ func (c *YamlEncoder) LoadFile(file string) (map[string]interface{}, error) {
 		return nil, err
 	}
 
+	return c.LoadMemory(string(buf))
+}
+
+// LoadMemory 加内存配置文件
+func (c *YamlEncoder) LoadMemory(config string) (map[string]interface{}, error) {
 	cfg := make(map[string]interface{})
-	err = yaml.Unmarshal(buf, &cfg)
+	err := yaml.Unmarshal([]byte(config), &cfg)
 	if err != nil {
 		return nil, err
 	}

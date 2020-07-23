@@ -20,3 +20,13 @@ func (c *TomlEncoder) LoadFile(file string) (map[string]interface{}, error) {
 	}
 	return cfg, nil
 }
+
+// LoadMemory 加载内存配置
+func (c *TomlEncoder) LoadMemory(config string) (map[string]interface{}, error) {
+	cfg := make(map[string]interface{})
+	err := toml.Unmarshal([]byte(config), &cfg)
+	if err != nil {
+		return nil, err
+	}
+	return cfg, nil
+}

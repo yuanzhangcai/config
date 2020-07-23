@@ -1,12 +1,10 @@
 package config
 
-import "github.com/yuanzhangcai/config/encoder"
-
 // Loader 加载器接口
 type Loader interface {
-	LoadFile(file string) error                                    // 加载配置文件
-	LoadFileWithEncoder(file string, loader encoder.Encoder) error // 指定编码器加载配置文件
-	LoadOsEnv()                                                    // 加载环境变量
+	LoadMemory(config, t string) error // 加载内存配置
+	LoadFile(file string) error        // 加载配置文件
+	LoadOsEnv() error                  // 加载环境变量
 }
 
 // Getter 获取接口
@@ -115,6 +113,11 @@ func SetPath(keys []string, value interface{}) {
 }
 
 // LoadOsEnv 加载环境变量
-func LoadOsEnv() {
-	defaultConfig.LoadOsEnv()
+func LoadOsEnv() error {
+	return defaultConfig.LoadOsEnv()
+}
+
+// LoadMemory 从内存中加载配置文件
+func LoadMemory(config, t string) error {
+	return defaultConfig.LoadMemory(config, t)
 }
