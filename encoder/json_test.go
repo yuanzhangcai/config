@@ -1,12 +1,21 @@
 package encoder
 
 import (
+	"os"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
 
-var configFilePath = "/Users/zacyuan/MyWork/config/examples/"
+var configFilePath = ""
+
+func init() {
+	configFilePath = os.Getenv("GITHUB_WORKSPACE")
+	if configFilePath == "" {
+		configFilePath = "/Users/zacyuan/MyWork/config"
+	}
+	configFilePath = configFilePath + "/examples/"
+}
 
 func TestNewJSONEncoder(t *testing.T) {
 	encoder := NewJSONEncoder()

@@ -1,4 +1,4 @@
-# config
+# config![build](https://github.com/yuanzhangcai/config/workflows/Go/badge.svg)&nbsp;[![codecov](https://codecov.io/gh/yuanzhangcai/config/branch/master/graph/badge.svg)](https://codecov.io/gh/yuanzhangcai/config)
 配置文件解析，目前支持toml、yaml、json文件格式。支持多配置文件重载。默认初次加载所有环境变量。
 
 example:
