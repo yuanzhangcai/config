@@ -32,3 +32,27 @@ func TestTomlLoadFile(t *testing.T) {
 		assert.Nil(t, cfg)
 	})
 }
+
+func TestTOMLLoadMemory(t *testing.T) {
+	t.Run("Toml LoadMemory success", func(t *testing.T) {
+		str := `
+		redis= "127.0.0.1:3679"
+	`
+		encoder := NewTomlEncoder()
+		cfg, err := encoder.LoadMemory(str)
+		assert.Nil(t, err)
+		assert.NotNil(t, cfg)
+		assert.Equal(t, "127.0.0.1:3679", cfg["redis"].(string))
+	})
+
+	t.Run("Toml LoadMemory error", func(t *testing.T) {
+		str := `
+		{}
+	`
+		encoder := NewTomlEncoder()
+		cfg, err := encoder.LoadMemory(str)
+		assert.NotNil(t, err)
+		assert.Nil(t, cfg)
+	})
+
+}

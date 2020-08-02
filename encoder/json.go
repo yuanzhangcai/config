@@ -25,7 +25,7 @@ func (c *JSONEncoder) LoadFile(file string) (map[string]interface{}, error) {
 }
 
 // LoadMemory 加载内存配置
-func (*JSONEncoder) LoadMemory(config string) (map[string]interface{}, error) {
+func (c *JSONEncoder) LoadMemory(config string) (map[string]interface{}, error) {
 	cfg := make(map[string]interface{})
 	err := json.Unmarshal([]byte(config), &cfg)
 	if err != nil {

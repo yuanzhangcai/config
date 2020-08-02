@@ -43,3 +43,16 @@ func TestJSONLoadFile(t *testing.T) {
 		assert.Nil(t, cfg)
 	})
 }
+
+func TestJSONLoadMemory(t *testing.T) {
+	str := `
+		{
+			"redis" : "127.0.0.1:3679"
+		}
+	`
+	encoder := NewJSONEncoder()
+	cfg, err := encoder.LoadMemory(str)
+	assert.Nil(t, err)
+	assert.NotNil(t, cfg)
+	assert.Equal(t, "127.0.0.1:3679", cfg["redis"].(string))
+}
