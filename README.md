@@ -1,4 +1,8 @@
-# config&nbsp;![build](https://github.com/yuanzhangcai/config/workflows/Go/badge.svg)&nbsp;[![codecov](https://codecov.io/gh/yuanzhangcai/config/branch/master/graph/badge.svg)](https://codecov.io/gh/yuanzhangcai/config)
+# config
+[![build](https://github.com/yuanzhangcai/config/workflows/Go/badge.svg)](https://github.com/yuanzhangcai/config/actions)
+[![codecov](https://codecov.io/gh/yuanzhangcai/config/branch/master/graph/badge.svg)](https://codecov.io/gh/yuanzhangcai/config)
+[![GitHub](https://img.shields.io/github/license/yuanzhangcai/config)](https://github.com/yuanzhangcai/config/blob/master/LICENSE)
+
 配置文件解析，目前支持toml、yaml、json文件格式。支持多配置文件重载。默认初次加载所有环境变量。支持配置文件热更新。
 
 example:
@@ -15,11 +19,11 @@ example:
     config.Set("newKey", "value")
 
     value := strut {
-		List   []string `json:"list"`
-		Server string   `json:"server"`
-		Count  int      `json:"count"`
-	}{}
-	err = Scan([]string{"db"}, &value)
+      List   []string `json:"list"`
+      Server string   `json:"server"`
+      Count  int      `json:"count"`
+    }{}
+    err = Scan([]string{"db"}, &value)
 
 ```
 
