@@ -168,6 +168,24 @@ func TestGetMap(t *testing.T) {
 	})
 }
 
+func TestGetStringMap(t *testing.T) {
+	t.Run("GetStringMap have key", func(t *testing.T) {
+		value := GetStringMap("db", "map")
+		assert.NotNil(t, value)
+		assert.Equal(t, "db1", value["db1"])
+	})
+
+	t.Run("GetStringMap key is not string map", func(t *testing.T) {
+		value := GetStringMap("db", "count")
+		assert.Nil(t, value)
+	})
+
+	t.Run("GetStringMap key is not exist", func(t *testing.T) {
+		value := GetStringMap("db", "yy")
+		assert.Nil(t, value)
+	})
+}
+
 func TestScan(t *testing.T) {
 	value := struct {
 		List   []string `json:"list"`

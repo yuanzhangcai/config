@@ -266,8 +266,21 @@ func (c *JSONConfig) GetMap(keys ...string) map[string]interface{} {
 	return c.json.GetPath(keys...).MustMap()
 }
 
+// GetStringMap 获取map数据
+func (c *JSONConfig) GetStringMap(keys ...string) map[string]string {
+	cfg := make(map[string]string)
+	err := c.Scan(keys, &cfg)
+	if err != nil {
+		return nil
+	}
+	return cfg
+}
+
 // Scan 读取配置到指定对象
 func (c *JSONConfig) Scan(keys []string, value interface{}) error {
+	c.m.RLock()
+	defer c.m.RUnlock()
+
 	buf, err := c.json.GetPath(keys...).MarshalJSON()
 	if err != nil {
 		return err

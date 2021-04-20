@@ -13,3 +13,8 @@ config_toml = "toml"
 list = ["score", "good"]
 server = "127.0.0.1:3306"
 count = 100
+[db.map]
+db1 = "db1"
+db2 = "db2"
+
+

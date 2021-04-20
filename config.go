@@ -19,6 +19,7 @@ type Getter interface {
 	GetFloat64(keys ...string) float64
 	GetArray(keys ...string) []interface{}
 	GetMap(keys ...string) map[string]interface{}
+	GetStringMap(keys ...string) map[string]string
 	Scan(keys []string, value interface{}) error
 }
 
@@ -95,6 +96,11 @@ func GetArray(keys ...string) []interface{} {
 // GetMap 获取map数据
 func GetMap(keys ...string) map[string]interface{} {
 	return defaultConfig.GetMap(keys...)
+}
+
+// GetStringMap 获取string map数据
+func GetStringMap(keys ...string) map[string]string {
+	return defaultConfig.GetStringMap(keys...)
 }
 
 // Scan 读取配置到指定对象
